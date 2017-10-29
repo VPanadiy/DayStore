@@ -24,8 +24,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
-       <bootstrap-version>3.3.7</bootstrap-version>
-       <jquery-version>3.2.1</jquery-version>
+        <bootstrap-version>3.3.7</bootstrap-version>
+        <jquery-version>3.2.1</jquery-version>
+
+        <jasypt-version>1.9.2</jasypt-version>
     </properties>
 
     <dependencies>
@@ -63,6 +65,7 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!--To integrate Spring Security in our Thymeleaf templates-->
         <!-- optional, it brings useful tags to display spring security stuff -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
@@ -101,6 +104,18 @@
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>${jquery-version}</version>
+        </dependency>
+
+        <!--Password encryption-->
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+            <version>${jasypt-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt-springsecurity3</artifactId>
+            <version>${jasypt-version}</version>
         </dependency>
 
     </dependencies>
