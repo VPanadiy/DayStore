@@ -2,8 +2,10 @@ package dream.development.services;
 
 import dream.development.model.User;
 
-public interface UserService extends CRUDService<User> {
+public interface UserService {
 
-    User findByUsername(String username);
+    User findUserByEmail(String email);
+
+    void saveUser(User user);
 
 }

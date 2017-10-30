@@ -3,15 +3,12 @@ package dream.development.model;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by jt on 12/16/15.
- */
 @MappedSuperclass
-public class AbstractDomainClass implements DomainObject {
+public abstract class AbstractDomainClass implements DomainObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Integer id;
+    private Integer id;
 
     @Version
     private Integer version;
@@ -49,8 +46,9 @@ public class AbstractDomainClass implements DomainObject {
     @PrePersist
     public void updateTimeStamps() {
         lastUpdated = new Date();
-        if (dateCreated==null) {
+        if (dateCreated == null) {
             dateCreated = new Date();
         }
     }
+
 }

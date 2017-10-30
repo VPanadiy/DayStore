@@ -4,15 +4,20 @@ import dream.development.model.Product;
 import dream.development.model.Role;
 import dream.development.model.User;
 import dream.development.repositories.ProductRepository;
+import dream.development.repositories.RoleRepository;
+import dream.development.repositories.UserRepository;
 import dream.development.services.RoleService;
 import dream.development.services.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -21,6 +26,12 @@ public class SpringJpaBootstrap implements ApplicationListener<ContextRefreshedE
     private ProductRepository productRepository;
     private UserService userService;
     private RoleService roleService;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private Logger log = Logger.getLogger(SpringJpaBootstrap.class);
 
@@ -34,19 +45,13 @@ public class SpringJpaBootstrap implements ApplicationListener<ContextRefreshedE
         this.userService = userService;
     }
 
-    @Autowired
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
-    }
-
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         loadProducts();
-        loadUsers();
-        loadRoles();
-        assignUsersToUserRole();
-        assignUsersToAdminRole();
+//        loadRoles();
+//        loadUsers();
+//        assignUsersToUserRole();
+//        assignUsersToAdminRole();
     }
 
     private void loadProducts() {
@@ -69,59 +74,65 @@ public class SpringJpaBootstrap implements ApplicationListener<ContextRefreshedE
         log.info("Saved Mug - id:" + mug.getId());
     }
 
-    private void loadUsers() {
-        User user1 = new User();
-        user1.setUsername("user");
-        user1.setPassword("user");
-        userService.saveOrUpdate(user1);
+//    private void loadRoles() {
+//        Role userRole = new Role();
+//        userRole.setRole("USER");
+//        roleService.saveRole(userRole);
+//        log.info("Saved role" + userRole.getRole());
+//        Role adminRole = new Role();
+//        adminRole.setRole("ADMIN");
+//        roleService.saveRole(adminRole);
+//        log.info("Saved role" + adminRole.getRole());
+//    }
+//
+//    private void loadUsers() {
+//        User user = new User();
+//        user.setUsername("user");
+//        user.setPassword(bCryptPasswordEncoder.encode("user"));
+//        user.setActive(1);
+//        Role userRole = roleRepository.findByRole("USER");
+//        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+//        userRepository.save(user);
+//
+//        User admin = new User();
+//        admin.setUsername("admin");
+//        admin.setPassword(bCryptPasswordEncoder.encode("admin"));
+//        admin.setActive(1);
+//        Role adminRole = roleRepository.findByRole("ADMIN");
+//        user.setRoles(new HashSet<Role>(Arrays.asList(adminRole)));
+//        userRepository.save(admin);
+//    }
 
-        User user2 = new User();
-        user2.setUsername("admin");
-        user2.setPassword("admin");
-        userService.saveOrUpdate(user2);
-
-    }
-
-    private void loadRoles() {
-        Role role = new Role();
-        role.setRole("USER");
-        roleService.saveOrUpdate(role);
-        log.info("Saved role" + role.getRole());
-        Role adminRole = new Role();
-        adminRole.setRole("ADMIN");
-        roleService.saveOrUpdate(adminRole);
-        log.info("Saved role" + adminRole.getRole());
-    }
-    private void assignUsersToUserRole() {
-        List<Role> roles = (List<Role>) roleService.listAll();
-        List<User> users = (List<User>) userService.listAll();
-
-        roles.forEach(role -> {
-            if (role.getRole().equalsIgnoreCase("USER")) {
-                users.forEach(user -> {
-                    if (user.getUsername().equals("user")) {
-                        user.addRole(role);
-                        userService.saveOrUpdate(user);
-                    }
-                });
-            }
-        });
-    }
-    private void assignUsersToAdminRole() {
-        List<Role> roles = (List<Role>) roleService.listAll();
-        List<User> users = (List<User>) userService.listAll();
-
-        roles.forEach(role -> {
-            if (role.getRole().equalsIgnoreCase("ADMIN")) {
-                users.forEach(user -> {
-                    if (user.getUsername().equals("admin")) {
-                        user.addRole(role);
-                        userService.saveOrUpdate(user);
-                    }
-                });
-            }
-        });
-    }
+//    private void assignUsersToUserRole() {
+//        List<Role> roles = (List<Role>) roleService.listAll();
+//        List<User> users = (List<User>) userService.listAll();
+//
+//        roles.forEach(role -> {
+//            if (role.getRole().equalsIgnoreCase("USER")) {
+//                users.forEach(user -> {
+//                    if (user.getUsername().equals("user")) {
+//                        user.addRole(role);
+//                        userService.saveOrUpdate(user);
+//                    }
+//                });
+//            }
+//        });
+//    }
+//    private void assignUsersToAdminRole() {
+//        List<Role> roles = (List<Role>) roleService.listAll();
+//        List<User> users = (List<User>) userService.listAll();
+//
+//        roles.forEach(role -> {
+//            if (role.getRole().equalsIgnoreCase("ADMIN")) {
+//                users.forEach(user -> {
+//                    if (user.getUsername().equals("admin")) {
+//                        user.addRole(role);
+//                        userService.saveOrUpdate(user);
+//                    }
+//                });
+//            }
+//        });
+//    }
 }
 
 

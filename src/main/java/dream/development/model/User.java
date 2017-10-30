@@ -1,29 +1,54 @@
 package dream.development.model;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-/**
- * Created by jt on 12/14/15.
- */
 @Entity
-public class User extends AbstractDomainClass  {
+public class User extends AbstractDomainClass {
 
     private String username;
 
+//    @Email(message = "*Please provide a valid Email")
+//    @NotEmpty(message = "*Please provide an email")
+    private String email;
+
+//    @Length(min = 5, message = "*Your password must have at least 5 characters")
+//    @NotEmpty(message = "*Please provide your password")
     @Transient
     private String password;
 
-    private String encryptedPassword;
-    private Boolean enabled = true;
+//    @NotEmpty(message = "*Please provide your first name")
+    private String firstName;
+//    @NotEmpty(message = "*Please provide your last name")
+    private String lastName;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
-    // ~ defaults to @JoinTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "user_id"),
-    //     inverseJoinColumns = @joinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    private int active;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
+
     private Integer failedLoginAttempts = 0;
+
+    public User() {
+    }
+
+    public User(String username, String email, String password, String firstName, String lastName, int active, Set<Role> roles, Integer failedLoginAttempts) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.active = active;
+        this.roles = roles;
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
 
     public String getUsername() {
         return username;
@@ -31,6 +56,14 @@ public class User extends AbstractDomainClass  {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -41,44 +74,36 @@ public class User extends AbstractDomainClass  {
         this.password = password;
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
+    public int getActive() {
+        return active;
+    }
 
-    public List<Role> getRoles() {
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public void addRole(Role role){
-        if(!this.roles.contains(role)){
-            this.roles.add(role);
-        }
-
-        if(!role.getUsers().contains(this)){
-            role.getUsers().add(this);
-        }
-    }
-
-    public void removeRole(Role role){
-        this.roles.remove(role);
-        role.getUsers().remove(this);
     }
 
     public Integer getFailedLoginAttempts() {
@@ -88,4 +113,19 @@ public class User extends AbstractDomainClass  {
     public void setFailedLoginAttempts(Integer failedLoginAttempts) {
         this.failedLoginAttempts = failedLoginAttempts;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", active=" + active +
+                ", roles=" + roles +
+                ", failedLoginAttempts=" + failedLoginAttempts +
+                '}';
+    }
+
 }
